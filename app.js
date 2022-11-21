@@ -54,22 +54,27 @@ function keysDown(e) {
 
 function keysUp(e) {
 	keys[e.keyCode] = false;
+	// console.log(e.keyCode);
 }
 
 function gameLoop(e) {
 	keysDiv.innerHTML = JSON.stringify(keys);
 
 	if (keys['87']) {
-		player.y -= 5;
+		player.y -= 5; // moving Up - W
 	}
 	if (keys['83']) {
-		player.y += 5;
+		player.y += 5; // moving Down - S
 	}
 	if (keys['65']) {
-		player.x -= 5;
+		player.x -= 5; // moving Left - A
 	}
 	if (keys['68']) {
-		player.x += 5;
+		player.x += 5; // moving Right - D
+	}
+
+	if (keys['32']) {
+		player.y -= 15; // Jump / Slide ???
 	}
 }
 
