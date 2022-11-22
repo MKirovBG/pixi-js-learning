@@ -1,15 +1,15 @@
 let app;
 let player;
 let keys = {};
-let keysDiv;
+let titleDiv;
 let backgroundView;
 
 window.onload = function () {
 	//Create the application
 	app = new PIXI.Application({
 		//  set values as object with CSS properties
-		width: 1000,
-		height: 600,
+		width: 1200,
+		height: 650,
 		backgroundColor: 0xaaaaaa,
 	});
 
@@ -19,25 +19,20 @@ window.onload = function () {
 	// add image to the application
 	player = PIXI.Sprite.from('./images/cat.png');
 	backgroundView = PIXI.Sprite.from('./images/forest-background-vector.webp');
-	// position the image
+
+	// position the player
 	player.anchor.set(0.5);
-	player.x = app.view.width / 2;
-	player.y = app.view.height / 2;
+	player.x = 70; // starting X
+	player.y = 520; // starting Y
+
 	// Background Image
-	backgroundView.y = backgroundView.y - 30;
-	//make the image move when chareter moves x && make the image infinite
+	backgroundView.y = backgroundView.y - 30; // position background
+
+	//make the background image move when chareter moves x && make the image infinite !!!!
 
 	// stage the image to the APP / update DOM
 	app.stage.addChild(backgroundView);
 	app.stage.addChild(player);
-
-	//interaction - Move with mouse
-	// app.stage.interactive = true;
-
-	/* stage the changes with function which is making the movement
-	 the stage takes two arguments (name, function)*/
-
-	// app.stage.on('pointermove', movePlayer);
 
 	// Keyboar event handler
 	window.addEventListener('keydown', keysDown);
@@ -47,29 +42,31 @@ window.onload = function () {
 
 	app.ticker.add(gameLoop);
 
-	keysDiv = document.querySelector('#keys');
+	titleDiv = document.querySelector('#title'); // add title
+	titleDiv.innerHTML = '<h1>Test Window</h1>'; // update Dom
 };
 
-// w s a d
-// 87 83 65 68
-
 function keysDown(e) {
-	keys[e.keyCode] = true;
+	keys[e.keyCode] = true; // function when button on keyboard is pressed down
 }
 
 function keysUp(e) {
-	keys[e.keyCode] = false;
+	keys[e.keyCode] = false; // function when button on keyboard is re-leased
+}
+
+function jump(playerY) {
+	// jump function
+	while (playerY <= 520) {
+		return (player.y += 10); // reset player to default 520 by adding 10 as speed
+	}
 }
 
 function gameLoop(e) {
-	keysDiv.innerHTML = JSON.stringify(keys);
+	// main game loop
 
-	if (keys['87']) {
-		player.y -= 5; // moving Up - W
-	}
-	if (keys['83']) {
-		player.y += 5; // moving Down - S
-	}
+	// w s a d
+	// 87 83 65 68
+
 	if (keys['65']) {
 		player.x -= 5; // moving Left - A
 	}
@@ -77,7 +74,31 @@ function gameLoop(e) {
 		player.x += 5; // moving Right - D
 	}
 
-	if (keys['32']) {
-		player.y -= 15; // Jump / Slide ???
+	if (keys['87']) {
+		if (player.y > 400) {
+			// set range 520 -> 400
+			player.y -= 15; //  Jump - W
+			if (player.y == 400) {
+				// if y == 400 call jump()
+				jump(player.y);
+			}
+		}
 	}
+
+	if (keys['87'] == false) {
+		// when W is released call the reset function
+		// after Jump run jump() to reset to default
+		jump(player.y);
+	}
+
+	if (keys['83'] && keys['68']) {
+		player.x += 10; // slide right - D + S
+	}
+	if (keys['83'] && keys['65']) {
+		player.x -= 10; // slide left - A + S
+	}
+
+	// if (keys['32']) { // disabling Spacebar movement
+	// 	player.y -= 15; // Jump / Slide ???
+	// }
 }
