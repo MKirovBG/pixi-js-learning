@@ -2,12 +2,13 @@ let app;
 let player;
 let keys = {};
 let keysDiv;
+let backgroundView;
 
 window.onload = function () {
 	//Create the application
 	app = new PIXI.Application({
 		//  set values as object with CSS properties
-		width: 600,
+		width: 1000,
 		height: 600,
 		backgroundColor: 0xaaaaaa,
 	});
@@ -17,13 +18,17 @@ window.onload = function () {
 
 	// add image to the application
 	player = PIXI.Sprite.from('./images/cat.png');
-
+	backgroundView = PIXI.Sprite.from('./images/forest-background-vector.webp');
 	// position the image
 	player.anchor.set(0.5);
 	player.x = app.view.width / 2;
 	player.y = app.view.height / 2;
+	// Background Image
+	backgroundView.y = backgroundView.y - 30;
+	//make the image move when chareter moves x && make the image infinite
 
 	// stage the image to the APP / update DOM
+	app.stage.addChild(backgroundView);
 	app.stage.addChild(player);
 
 	//interaction - Move with mouse
@@ -54,7 +59,6 @@ function keysDown(e) {
 
 function keysUp(e) {
 	keys[e.keyCode] = false;
-	// console.log(e.keyCode);
 }
 
 function gameLoop(e) {
@@ -77,14 +81,3 @@ function gameLoop(e) {
 		player.y -= 15; // Jump / Slide ???
 	}
 }
-
-// follow mouse function on hover
-
-/*
-function movePlayer(e) {
-	let position = e.data.global;
-
-	player.x = position.x;
-	player.y = position.y;
-}
-*/
